@@ -1,0 +1,511 @@
+[
+  {
+    "id": "ola-01",
+    "category": "routing",
+    "question": "How does a question get routed to SQL, ETL, or clarification?",
+    "expected": [
+      "ola_agent/graph.py:build_graph",
+      "ola_agent/provider.py:GroqProvider.route"
+    ],
+    "reference_answer": "The graph starts at route, calls provider.route, and branches on its destination. The live provider requests a typed Route classifying SQL analytics, ETL, or clarification.",
+    "evidence": [
+      {
+        "target": "ola_agent/graph.py:build_graph",
+        "start": 33,
+        "end": 109,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/graph.py#L33-L109"
+      },
+      {
+        "target": "ola_agent/provider.py:GroqProvider.route",
+        "start": 46,
+        "end": 47,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/provider.py#L46-L47"
+      }
+    ]
+  },
+  {
+    "id": "ola-02",
+    "category": "offline",
+    "question": "What happens when offline mode receives a question outside its examples?",
+    "expected": [
+      "ola_agent/provider.py:DemoProvider.route"
+    ],
+    "reference_answer": "Unknown questions return a clarify destination; the demo does not fabricate a SQL or ETL plan.",
+    "evidence": [
+      {
+        "target": "ola_agent/provider.py:DemoProvider.route",
+        "start": 21,
+        "end": 22,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/provider.py#L21-L22"
+      }
+    ]
+  },
+  {
+    "id": "ola-03",
+    "category": "sql-safety",
+    "question": "Where are multiple SQL statements and database writes rejected?",
+    "expected": [
+      "ola_agent/database.py:validate_sql"
+    ],
+    "reference_answer": "The validator requires exactly one Query AST and rejects write, lock, and administrative nodes.",
+    "evidence": [
+      {
+        "target": "ola_agent/database.py:validate_sql",
+        "start": 15,
+        "end": 36,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/database.py#L15-L36"
+      }
+    ]
+  },
+  {
+    "id": "ola-04",
+    "category": "sql-safety",
+    "question": "Can an approved model review override the SQL safety checks?",
+    "expected": [
+      "ola_agent/graph.py:build_graph.guard",
+      "ola_agent/database.py:Database.query"
+    ],
+    "reference_answer": "The graph guards before review; Database.query validates SQL again and enforces database read-only controls.",
+    "evidence": [
+      {
+        "target": "ola_agent/graph.py:build_graph.guard",
+        "start": 44,
+        "end": 49,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/graph.py#L44-L49"
+      },
+      {
+        "target": "ola_agent/database.py:Database.query",
+        "start": 58,
+        "end": 89,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/database.py#L58-L89"
+      }
+    ]
+  },
+  {
+    "id": "ola-05",
+    "category": "sql-safety",
+    "question": "How does SQLite remain read-only if the SQL validator is bypassed?",
+    "expected": [
+      "ola_agent/database.py:Database.query"
+    ],
+    "reference_answer": "SQLite opens with mode=ro, enables query_only, and installs an authorizer that allows only approved reads and functions.",
+    "evidence": [
+      {
+        "target": "ola_agent/database.py:Database.query",
+        "start": 58,
+        "end": 89,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/database.py#L58-L89"
+      }
+    ]
+  },
+  {
+    "id": "ola-06",
+    "category": "sql-safety",
+    "question": "How are PostgreSQL queries prevented from writing or running indefinitely?",
+    "expected": [
+      "ola_agent/database.py:Database.query"
+    ],
+    "reference_answer": "The query transaction is READ ONLY, with a local 3000ms statement timeout and public search_path.",
+    "evidence": [
+      {
+        "target": "ola_agent/database.py:Database.query",
+        "start": 58,
+        "end": 89,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/database.py#L58-L89"
+      }
+    ]
+  },
+  {
+    "id": "ola-07",
+    "category": "sql-safety",
+    "question": "How are system schemas, unknown tables, and dangerous functions blocked?",
+    "expected": [
+      "ola_agent/database.py:validate_sql"
+    ],
+    "reference_answer": "Qualified tables are rejected; table names must be demo tables or CTE aliases, and functions must be allowlisted.",
+    "evidence": [
+      {
+        "target": "ola_agent/database.py:validate_sql",
+        "start": 15,
+        "end": 36,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/database.py#L15-L36"
+      }
+    ]
+  },
+  {
+    "id": "ola-08",
+    "category": "sql-safety",
+    "question": "Are recursive SQL queries allowed?",
+    "expected": [
+      "ola_agent/database.py:validate_sql"
+    ],
+    "reference_answer": "A recursive With node is rejected.",
+    "evidence": [
+      {
+        "target": "ola_agent/database.py:validate_sql",
+        "start": 15,
+        "end": 36,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/database.py#L15-L36"
+      }
+    ]
+  },
+  {
+    "id": "ola-09",
+    "category": "limits",
+    "question": "How does a query detect truncated results and limit returned rows?",
+    "expected": [
+      "ola_agent/database.py:Database.query"
+    ],
+    "reference_answer": "The limit defaults to 100, is clamped to 1\u20131000, and limit+1 rows are fetched to detect truncation before slicing.",
+    "evidence": [
+      {
+        "target": "ola_agent/database.py:Database.query",
+        "start": 58,
+        "end": 89,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/database.py#L58-L89"
+      }
+    ]
+  },
+  {
+    "id": "ola-10",
+    "category": "retries",
+    "question": "When can a SQL execution failure trigger another generation attempt?",
+    "expected": [
+      "ola_agent/graph.py:build_graph.sql_next",
+      "ola_agent/graph.py:build_graph.generate"
+    ],
+    "reference_answer": "An error routes to generate only while attempts is less than two; generation increments attempts.",
+    "evidence": [
+      {
+        "target": "ola_agent/graph.py:build_graph.sql_next",
+        "start": 62,
+        "end": 64,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/graph.py#L62-L64"
+      },
+      {
+        "target": "ola_agent/graph.py:build_graph.generate",
+        "start": 40,
+        "end": 43,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/graph.py#L40-L43"
+      }
+    ]
+  },
+  {
+    "id": "ola-11",
+    "category": "retries",
+    "question": "What happens if semantic review rejects the SQL twice?",
+    "expected": [
+      "ola_agent/graph.py:build_graph.judge_next",
+      "ola_agent/graph.py:build_graph.finish_sql"
+    ],
+    "reference_answer": "After the second attempt rejection routes to finish_sql, which returns no answer with the error.",
+    "evidence": [
+      {
+        "target": "ola_agent/graph.py:build_graph.judge_next",
+        "start": 65,
+        "end": 66,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/graph.py#L65-L66"
+      },
+      {
+        "target": "ola_agent/graph.py:build_graph.finish_sql",
+        "start": 67,
+        "end": 73,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/graph.py#L67-L73"
+      }
+    ]
+  },
+  {
+    "id": "ola-12",
+    "category": "limits",
+    "question": "What stops an ETL tool loop that never finishes?",
+    "expected": [
+      "ola_agent/graph.py:build_graph.after_tool",
+      "ola_agent/graph.py:build_graph.finish_etl"
+    ],
+    "reference_answer": "After six tool steps the graph finishes and says the task may be incomplete when no finish action was received.",
+    "evidence": [
+      {
+        "target": "ola_agent/graph.py:build_graph.after_tool",
+        "start": 87,
+        "end": 88,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/graph.py#L87-L88"
+      },
+      {
+        "target": "ola_agent/graph.py:build_graph.finish_etl",
+        "start": 89,
+        "end": 96,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/graph.py#L89-L96"
+      }
+    ]
+  },
+  {
+    "id": "ola-13",
+    "category": "etl",
+    "question": "Can the model execute arbitrary Python or choose arbitrary export paths?",
+    "expected": [
+      "ola_agent/schemas.py:ETLAction",
+      "ola_agent/schemas.py:StrictModel",
+      "ola_agent/etl.py:ETLTools.execute"
+    ],
+    "reference_answer": "Actions use a fixed Literal vocabulary; extra fields are forbidden, and exports use application-generated UUID filenames under exports.",
+    "evidence": [
+      {
+        "target": "ola_agent/schemas.py:ETLAction",
+        "start": 30,
+        "end": 38,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/schemas.py#L30-L38"
+      },
+      {
+        "target": "ola_agent/schemas.py:StrictModel",
+        "start": 5,
+        "end": 6,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/schemas.py#L5-L6"
+      },
+      {
+        "target": "ola_agent/etl.py:ETLTools.execute",
+        "start": 21,
+        "end": 64,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/etl.py#L21-L64"
+      }
+    ]
+  },
+  {
+    "id": "ola-14",
+    "category": "etl",
+    "question": "Where do ETL exports go and how are filenames generated?",
+    "expected": [
+      "ola_agent/etl.py:ETLTools.execute"
+    ],
+    "reference_answer": "Exports go under root/exports with a rides_ prefix, 12 UUID hex characters, and the requested csv/json extension.",
+    "evidence": [
+      {
+        "target": "ola_agent/etl.py:ETLTools.execute",
+        "start": 21,
+        "end": 64,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/etl.py#L21-L64"
+      }
+    ]
+  },
+  {
+    "id": "ola-15",
+    "category": "etl",
+    "question": "What protects downloaded CSV cells from formula injection?",
+    "expected": [
+      "ola_agent/etl.py:ETLTools.execute"
+    ],
+    "reference_answer": "String cells beginning with =, +, -, or @ are prefixed with an apostrophe in the CSV output copy.",
+    "evidence": [
+      {
+        "target": "ola_agent/etl.py:ETLTools.execute",
+        "start": 21,
+        "end": 64,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/etl.py#L21-L64"
+      }
+    ]
+  },
+  {
+    "id": "ola-16",
+    "category": "etl",
+    "question": "Does an invalid second filter leave a partially modified dataframe?",
+    "expected": [
+      "ola_agent/etl.py:ETLTools.execute"
+    ],
+    "reference_answer": "Filtering updates a local dataframe and assigns self.frame only after every condition succeeds; invalid conditions leave the stored frame unchanged.",
+    "evidence": [
+      {
+        "target": "ola_agent/etl.py:ETLTools.execute",
+        "start": 21,
+        "end": 64,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/etl.py#L21-L64"
+      }
+    ]
+  },
+  {
+    "id": "ola-17",
+    "category": "etl",
+    "question": "What differs between offline and live Pokemon extraction?",
+    "expected": [
+      "ola_agent/etl.py:ETLTools.execute"
+    ],
+    "reference_answer": "Offline reads the local fixture; live requests the fixed Pokemon endpoint with limit=20, a 10-second timeout, and a 1 MB body limit.",
+    "evidence": [
+      {
+        "target": "ola_agent/etl.py:ETLTools.execute",
+        "start": 21,
+        "end": 64,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/etl.py#L21-L64"
+      }
+    ]
+  },
+  {
+    "id": "ola-18",
+    "category": "etl",
+    "question": "What information does the ETL planner receive about the current dataframe?",
+    "expected": [
+      "ola_agent/etl.py:ETLTools.observe",
+      "ola_agent/provider.py:GroqProvider.etl"
+    ],
+    "reference_answer": "The observation contains row_count, columns, and five preview records. The live planner also receives the question, trace history, and step count.",
+    "evidence": [
+      {
+        "target": "ola_agent/etl.py:ETLTools.observe",
+        "start": 17,
+        "end": 19,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/etl.py#L17-L19"
+      },
+      {
+        "target": "ola_agent/provider.py:GroqProvider.etl",
+        "start": 55,
+        "end": 56,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/provider.py#L55-L56"
+      }
+    ]
+  },
+  {
+    "id": "ola-19",
+    "category": "provider",
+    "question": "Where are the live model timeout, retries, and model selection configured?",
+    "expected": [
+      "ola_agent/provider.py:GroqProvider.__init__"
+    ],
+    "reference_answer": "ChatGroq uses GROQ_MODEL or the code default, timeout=30, max_retries=0, temperature=0, and max_tokens=1400; an API key is required.",
+    "evidence": [
+      {
+        "target": "ola_agent/provider.py:GroqProvider.__init__",
+        "start": 34,
+        "end": 39,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/provider.py#L34-L39"
+      }
+    ]
+  },
+  {
+    "id": "ola-20",
+    "category": "provider",
+    "question": "How are structured model responses validated and model calls counted?",
+    "expected": [
+      "ola_agent/provider.py:GroqProvider.structured"
+    ],
+    "reference_answer": "The adapter increments calls, uses with_structured_output with the supplied schema and json_mode, and includes its JSON schema in the system message.",
+    "evidence": [
+      {
+        "target": "ola_agent/provider.py:GroqProvider.structured",
+        "start": 41,
+        "end": 44,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/provider.py#L41-L44"
+      }
+    ]
+  },
+  {
+    "id": "ola-21",
+    "category": "evaluation",
+    "question": "How are SQL results checked independently of the generated query?",
+    "expected": [
+      "ola_agent/evaluate.py:oracle",
+      "ola_agent/evaluate.py:compare",
+      "ola_agent/evaluate.py:evaluate"
+    ],
+    "reference_answer": "Pandas oracles compute expected results from CSVs; evaluate compares actual tables using compare, with absolute tolerance .011, zero relative tolerance, and relaxed dtype checking.",
+    "evidence": [
+      {
+        "target": "ola_agent/evaluate.py:oracle",
+        "start": 15,
+        "end": 35,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/evaluate.py#L15-L35"
+      },
+      {
+        "target": "ola_agent/evaluate.py:compare",
+        "start": 38,
+        "end": 40,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/evaluate.py#L38-L40"
+      },
+      {
+        "target": "ola_agent/evaluate.py:evaluate",
+        "start": 43,
+        "end": 82,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/evaluate.py#L43-L82"
+      }
+    ]
+  },
+  {
+    "id": "ola-22",
+    "category": "evaluation",
+    "question": "Why does live evaluation skip the Pokemon extraction case?",
+    "expected": [
+      "ola_agent/evaluate.py:evaluate"
+    ],
+    "reference_answer": "The live extraction endpoint changes and is not the fixed offline fixture; live evaluation skips examples containing Pokemon.",
+    "evidence": [
+      {
+        "target": "ola_agent/evaluate.py:evaluate",
+        "start": 43,
+        "end": 82,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/evaluate.py#L43-L82"
+      }
+    ]
+  },
+  {
+    "id": "ola-23",
+    "category": "data",
+    "question": "How is the synthetic ride dataset made reproducible?",
+    "expected": [
+      "ola_agent/seed.py:generate"
+    ],
+    "reference_answer": "The generator uses a local random.Random(42), fixed loop sizes, and records seed 42 and the generated row counts in the manifest.",
+    "evidence": [
+      {
+        "target": "ola_agent/seed.py:generate",
+        "start": 14,
+        "end": 46,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/seed.py#L14-L46"
+      }
+    ]
+  },
+  {
+    "id": "ola-24",
+    "category": "isolation",
+    "question": "How is ETL state kept separate between workflow runs?",
+    "expected": [
+      "ola_agent/graph.py:run",
+      "ola_agent/graph.py:build_graph",
+      "ola_agent/etl.py:ETLTools.__init__"
+    ],
+    "reference_answer": "Each run builds a new graph, constructing a new ETLTools object that loads the original rides CSV and starts with an empty export list.",
+    "evidence": [
+      {
+        "target": "ola_agent/graph.py:run",
+        "start": 112,
+        "end": 119,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/graph.py#L112-L119"
+      },
+      {
+        "target": "ola_agent/graph.py:build_graph",
+        "start": 33,
+        "end": 109,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/graph.py#L33-L109"
+      },
+      {
+        "target": "ola_agent/etl.py:ETLTools.__init__",
+        "start": 11,
+        "end": 15,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/etl.py#L11-L15"
+      }
+    ]
+  },
+  {
+    "id": "ola-25",
+    "category": "input",
+    "question": "Where are blank or excessively long workflow questions rejected?",
+    "expected": [
+      "ola_agent/graph.py:run"
+    ],
+    "reference_answer": "run rejects questions whose stripped text is empty or whose length exceeds 2000 before invoking the graph.",
+    "evidence": [
+      {
+        "target": "ola_agent/graph.py:run",
+        "start": 112,
+        "end": 119,
+        "url": "https://github.com/b-amit11/ola-data-agent/blob/e923bcb09280b7f1b3962b890931b86b413444ec/ola_agent/graph.py#L112-L119"
+      }
+    ]
+  }
+]

@@ -1,0 +1,364 @@
+{
+  "cases": [
+    {
+      "question": "How does a question get routed to SQL, ETL, or clarification?",
+      "recall_at_5": 1.0,
+      "retrieved": [
+        "ola_agent/graph.py:build_graph",
+        "ola_agent/provider.py:GroqProvider.route",
+        "ola_agent/schemas.py:Route",
+        "tests/test_workflows.py:test_etl_finishes_and_exports",
+        "tests/test_workflows.py:test_sql_results_match_pandas"
+      ],
+      "id": "ola-01",
+      "missing": []
+    },
+    {
+      "question": "What happens when offline mode receives a question outside its examples?",
+      "recall_at_5": 1.0,
+      "retrieved": [
+        "app.py:<module>",
+        "ola_agent/examples.py:<module>",
+        "ola_agent/provider.py:DemoProvider",
+        "ola_agent/provider.py:DemoProvider.route"
+      ],
+      "id": "ola-02",
+      "missing": []
+    },
+    {
+      "question": "Where are multiple SQL statements and database writes rejected?",
+      "recall_at_5": 1.0,
+      "retrieved": [
+        "ola_agent/database.py:validate_sql",
+        "ola_agent/provider.py:GroqProvider.sql",
+        "tests/test_workflows.py:test_semantic_rejection_stops_after_two_attempts",
+        "tests/test_workflows.py:test_semantic_rejection_stops_after_two_attempts.Reject",
+        "tests/test_workflows.py:test_semantic_rejection_stops_after_two_attempts.Reject.review"
+      ],
+      "id": "ola-03",
+      "missing": []
+    },
+    {
+      "question": "Can an approved model review override the SQL safety checks?",
+      "recall_at_5": 0.0,
+      "retrieved": [
+        "ola_agent/graph.py:<module>",
+        "ola_agent/graph.py:build_graph.judge",
+        "ola_agent/provider.py:DemoProvider.review",
+        "ola_agent/provider.py:GroqProvider.review",
+        "ola_agent/schemas.py:Review"
+      ],
+      "id": "ola-04",
+      "missing": [
+        "ola_agent/database.py:Database.query",
+        "ola_agent/graph.py:build_graph.guard"
+      ]
+    },
+    {
+      "question": "How does SQLite remain read-only if the SQL validator is bypassed?",
+      "recall_at_5": 1.0,
+      "retrieved": [
+        "ola_agent/database.py:Database",
+        "ola_agent/database.py:Database.query",
+        "ola_agent/database.py:validate_sql",
+        "tests/test_guardrails.py:test_database_remains_read_only_even_if_parser_is_bypassed",
+        "tests/test_postgres.py:test_postgres_permissions_and_read_only_transaction"
+      ],
+      "id": "ola-05",
+      "missing": []
+    },
+    {
+      "question": "How are PostgreSQL queries prevented from writing or running indefinitely?",
+      "recall_at_5": 0.0,
+      "retrieved": [
+        "ola_agent/database.py:validate_sql",
+        "ola_agent/provider.py:GroqProvider.sql",
+        "tests/test_app.py:test_demo_app_and_disabled_live_without_key",
+        "tests/test_postgres.py:test_postgres_permissions_and_read_only_transaction",
+        "tests/test_workflows.py:test_unsafe_sql_never_reaches_judge_or_execution"
+      ],
+      "id": "ola-06",
+      "missing": [
+        "ola_agent/database.py:Database.query"
+      ]
+    },
+    {
+      "question": "How are system schemas, unknown tables, and dangerous functions blocked?",
+      "recall_at_5": 1.0,
+      "retrieved": [
+        "ola_agent/database.py:validate_sql",
+        "ola_agent/provider.py:GroqProvider.sql",
+        "ola_agent/provider.py:GroqProvider.structured",
+        "tests/test_guardrails.py:test_blocks_non_analytics_sql",
+        "tests/test_provider.py:test_live_adapter_structured_schema_without_network.FakeModel.invoke"
+      ],
+      "id": "ola-07",
+      "missing": []
+    },
+    {
+      "question": "Are recursive SQL queries allowed?",
+      "recall_at_5": 1.0,
+      "retrieved": [
+        "app.py:<module>",
+        "ola_agent/database.py:Database.query",
+        "ola_agent/database.py:Database.query.authorize",
+        "ola_agent/database.py:validate_sql",
+        "ola_agent/provider.py:GroqProvider.sql"
+      ],
+      "id": "ola-08",
+      "missing": []
+    },
+    {
+      "question": "How does a query detect truncated results and limit returned rows?",
+      "recall_at_5": 1.0,
+      "retrieved": [
+        "ola_agent/database.py:Database",
+        "ola_agent/database.py:Database.query",
+        "ola_agent/graph.py:build_graph.execute",
+        "ola_agent/graph.py:build_graph.finish_sql",
+        "tests/test_guardrails.py:test_row_limit_and_missing_column"
+      ],
+      "id": "ola-09",
+      "missing": []
+    },
+    {
+      "question": "When can a SQL execution failure trigger another generation attempt?",
+      "recall_at_5": 0.5,
+      "retrieved": [
+        "ola_agent/graph.py:build_graph.generate",
+        "ola_agent/graph.py:build_graph.judge_next",
+        "tests/test_workflows.py:test_one_sql_execution_repair",
+        "tests/test_workflows.py:test_one_sql_execution_repair.Repair",
+        "tests/test_workflows.py:test_one_sql_execution_repair.Repair.sql"
+      ],
+      "id": "ola-10",
+      "missing": [
+        "ola_agent/graph.py:build_graph.sql_next"
+      ]
+    },
+    {
+      "question": "What happens if semantic review rejects the SQL twice?",
+      "recall_at_5": 0.0,
+      "retrieved": [
+        "ola_agent/graph.py:build_graph.judge",
+        "ola_agent/provider.py:GroqProvider.review",
+        "tests/test_workflows.py:test_semantic_rejection_stops_after_two_attempts",
+        "tests/test_workflows.py:test_semantic_rejection_stops_after_two_attempts.Reject",
+        "tests/test_workflows.py:test_semantic_rejection_stops_after_two_attempts.Reject.review"
+      ],
+      "id": "ola-11",
+      "missing": [
+        "ola_agent/graph.py:build_graph.finish_sql",
+        "ola_agent/graph.py:build_graph.judge_next"
+      ]
+    },
+    {
+      "question": "What stops an ETL tool loop that never finishes?",
+      "recall_at_5": 1.0,
+      "retrieved": [
+        "ola_agent/etl.py:<module>",
+        "ola_agent/graph.py:<module>",
+        "ola_agent/graph.py:build_graph",
+        "ola_agent/graph.py:build_graph.after_tool",
+        "ola_agent/graph.py:build_graph.finish_etl"
+      ],
+      "id": "ola-12",
+      "missing": []
+    },
+    {
+      "question": "Can the model execute arbitrary Python or choose arbitrary export paths?",
+      "recall_at_5": 0.0,
+      "retrieved": [
+        "app.py:<module>",
+        "ola_agent/etl.py:<module>",
+        "ola_agent/provider.py:GroqProvider.etl",
+        "tests/test_guardrails.py:test_atomic_filter_and_no_model_paths",
+        "tests/test_guardrails.py:test_exports_stay_in_workspace_and_escape_formulas"
+      ],
+      "id": "ola-13",
+      "missing": [
+        "ola_agent/etl.py:ETLTools.execute",
+        "ola_agent/schemas.py:ETLAction",
+        "ola_agent/schemas.py:StrictModel"
+      ]
+    },
+    {
+      "question": "Where do ETL exports go and how are filenames generated?",
+      "recall_at_5": 0.0,
+      "retrieved": [
+        "app.py:<module>",
+        "ola_agent/graph.py:<module>",
+        "ola_agent/graph.py:build_graph",
+        "ola_agent/graph.py:build_graph.finish_etl",
+        "tests/test_workflows.py:test_etl_finishes_and_exports"
+      ],
+      "id": "ola-14",
+      "missing": [
+        "ola_agent/etl.py:ETLTools.execute"
+      ]
+    },
+    {
+      "question": "What protects downloaded CSV cells from formula injection?",
+      "recall_at_5": 1.0,
+      "retrieved": [
+        "app.py:<module>",
+        "ola_agent/etl.py:ETLTools",
+        "ola_agent/etl.py:ETLTools.__init__",
+        "ola_agent/etl.py:ETLTools.execute",
+        "tests/test_guardrails.py:test_exports_stay_in_workspace_and_escape_formulas"
+      ],
+      "id": "ola-15",
+      "missing": []
+    },
+    {
+      "question": "Does an invalid second filter leave a partially modified dataframe?",
+      "recall_at_5": 0.0,
+      "retrieved": [
+        "ola_agent/provider.py:GroqProvider",
+        "ola_agent/provider.py:GroqProvider.etl",
+        "ola_agent/schemas.py:ETLAction",
+        "ola_agent/schemas.py:Filter",
+        "tests/test_guardrails.py:test_atomic_filter_and_no_model_paths"
+      ],
+      "id": "ola-16",
+      "missing": [
+        "ola_agent/etl.py:ETLTools.execute"
+      ]
+    },
+    {
+      "question": "What differs between offline and live Pokemon extraction?",
+      "recall_at_5": 0.0,
+      "retrieved": [
+        "app.py:<module>",
+        "ola_agent/evaluate.py:evaluate",
+        "ola_agent/provider.py:GroqProvider.route",
+        "ola_agent/schemas.py:ETLAction",
+        "tests/test_workflows.py:test_state_does_not_leak_between_runs"
+      ],
+      "id": "ola-17",
+      "missing": [
+        "ola_agent/etl.py:ETLTools.execute"
+      ]
+    },
+    {
+      "question": "What information does the ETL planner receive about the current dataframe?",
+      "recall_at_5": 0.5,
+      "retrieved": [
+        "ola_agent/graph.py:build_graph.plan_etl",
+        "ola_agent/provider.py:GroqProvider",
+        "ola_agent/provider.py:GroqProvider.etl",
+        "tests/test_workflows.py:test_demo_does_not_pretend_to_answer_arbitrary_questions",
+        "tests/test_workflows.py:test_etl_step_budget.Endless.etl"
+      ],
+      "id": "ola-18",
+      "missing": [
+        "ola_agent/etl.py:ETLTools.observe"
+      ]
+    },
+    {
+      "question": "Where are the live model timeout, retries, and model selection configured?",
+      "recall_at_5": 1.0,
+      "retrieved": [
+        "ola_agent/provider.py:GroqProvider.__init__",
+        "tests/test_app.py:test_demo_app_and_disabled_live_without_key",
+        "tests/test_provider.py:test_live_adapter_structured_schema_without_network",
+        "tests/test_provider.py:test_live_adapter_structured_schema_without_network.FakeModel.__init__",
+        "tests/test_provider.py:test_live_adapter_structured_schema_without_network.FakeModel.invoke"
+      ],
+      "id": "ola-19",
+      "missing": []
+    },
+    {
+      "question": "How are structured model responses validated and model calls counted?",
+      "recall_at_5": 1.0,
+      "retrieved": [
+        "ola_agent/provider.py:GroqProvider.structured",
+        "tests/test_provider.py:test_live_adapter_structured_schema_without_network",
+        "tests/test_provider.py:test_live_adapter_structured_schema_without_network.FakeModel.__init__",
+        "tests/test_provider.py:test_live_adapter_structured_schema_without_network.FakeModel.invoke",
+        "tests/test_provider.py:test_live_adapter_structured_schema_without_network.FakeModel.with_structured_output"
+      ],
+      "id": "ola-20",
+      "missing": []
+    },
+    {
+      "question": "How are SQL results checked independently of the generated query?",
+      "recall_at_5": 0.3333333333333333,
+      "retrieved": [
+        "app.py:<module>",
+        "ola_agent/evaluate.py:evaluate",
+        "ola_agent/graph.py:<module>",
+        "ola_agent/graph.py:build_graph",
+        "ola_agent/graph.py:build_graph.generate"
+      ],
+      "id": "ola-21",
+      "missing": [
+        "ola_agent/evaluate.py:compare",
+        "ola_agent/evaluate.py:oracle"
+      ]
+    },
+    {
+      "question": "Why does live evaluation skip the Pokemon extraction case?",
+      "recall_at_5": 1.0,
+      "retrieved": [
+        "app.py:<module>",
+        "ola_agent/evaluate.py:<module>",
+        "ola_agent/evaluate.py:evaluate",
+        "ola_agent/provider.py:GroqProvider.route",
+        "ola_agent/schemas.py:ETLAction"
+      ],
+      "id": "ola-22",
+      "missing": []
+    },
+    {
+      "question": "How is the synthetic ride dataset made reproducible?",
+      "recall_at_5": 0.0,
+      "retrieved": [
+        "app.py:<module>"
+      ],
+      "id": "ola-23",
+      "missing": [
+        "ola_agent/seed.py:generate"
+      ]
+    },
+    {
+      "question": "How is ETL state kept separate between workflow runs?",
+      "recall_at_5": 0.0,
+      "retrieved": [
+        "ola_agent/graph.py:State",
+        "tests/test_workflows.py:<module>",
+        "tests/test_workflows.py:test_etl_finishes_and_exports",
+        "tests/test_workflows.py:test_etl_step_budget",
+        "tests/test_workflows.py:test_state_does_not_leak_between_runs"
+      ],
+      "id": "ola-24",
+      "missing": [
+        "ola_agent/etl.py:ETLTools.__init__",
+        "ola_agent/graph.py:build_graph",
+        "ola_agent/graph.py:run"
+      ]
+    },
+    {
+      "question": "Where are blank or excessively long workflow questions rejected?",
+      "recall_at_5": 0.0,
+      "retrieved": [
+        "tests/test_workflows.py:test_semantic_rejection_stops_after_two_attempts",
+        "tests/test_workflows.py:test_semantic_rejection_stops_after_two_attempts.Reject",
+        "tests/test_workflows.py:test_semantic_rejection_stops_after_two_attempts.Reject.review",
+        "tests/test_workflows.py:test_unsafe_sql_never_reaches_judge_or_execution.Unsafe.review",
+        "tests/test_workflows.py:test_unsafe_sql_never_reaches_judge_or_execution.Unsafe.sql"
+      ],
+      "id": "ola-25",
+      "missing": [
+        "ola_agent/graph.py:run"
+      ]
+    }
+  ],
+  "mean_recall_at_5": 0.5333333333333333,
+  "repository": "https://github.com/b-amit11/ola-data-agent",
+  "commit": "e923bcb09280b7f1b3962b890931b86b413444ec",
+  "metric": "Exact labeled-symbol macro recall@5",
+  "fully_retrieved": 12,
+  "zero_target_hits": 10,
+  "total_cases": 25
+}

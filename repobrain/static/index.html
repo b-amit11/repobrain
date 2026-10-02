@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RepoBrain · Code intelligence</title><link rel="icon" href="/static/favicon.svg"><link rel="stylesheet" href="/static/style.css"><script src="/static/app.js" defer></script></head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="/"><span class="mark">rb</span> RepoBrain <span class="version">LOCAL</span></a>
+  <div class="nav-heading">WORKSPACE</div><div class="nav-active"><span>⌕</span> Explore code</div>
+  <div class="repo-heading"><span>REPOSITORIES</span><button id="add-repo" class="icon-button" aria-label="Index a repository">+</button></div>
+  <div id="repos" class="repo-list"></div>
+  <div class="sidebar-bottom"><span class="small-label">RETRIEVAL ENGINE</span><strong>Python · BM25</strong><p>Commit-pinned source evidence</p><span id="ai-state" class="badge">Checking configuration</span></div>
+</aside>
+<main>
+  <header><div><span class="breadcrumb">Workspace /</span> <span id="repo-name">Explore</span></div><button id="refresh" class="secondary" disabled>Reindex HEAD</button></header>
+  <section class="workspace">
+    <div class="eyebrow">CODEBASE INTELLIGENCE <span>01 / EXPLORE</span></div>
+    <h1>Follow the code.<br><span>Find the evidence.</span></h1>
+    <p class="intro">Ask about your repository. Trace every result back to its source.</p>
+    <div class="snapshot"><span class="snapshot-label">INDEXED SNAPSHOT</span><code id="sha">No repository selected</code><span id="stats"></span></div>
+    <form id="ask-form" class="question-box"><label for="question" class="sr-only">Question about your repository</label><textarea id="question" rows="2" placeholder="How does authentication work in this repository?" maxlength="2000" required></textarea><div class="question-footer"><span id="mode-hint">Search source code with citations</span><button id="ask" type="submit" disabled>Find evidence <span>↵</span></button></div></form>
+    <div class="suggestions"><span>TRY ASKING</span><button data-question="How does API key authentication work?">API key authentication</button><button data-question="Who can cancel an order?">Order permissions</button><button data-question="Where is the order total calculated?">Price calculation</button></div>
+    <p id="message" role="status" aria-live="polite"></p>
+    <section id="results" hidden><div class="section-title"><h2 id="result-title">Source evidence</h2><span id="timing"></span></div><div id="answer"></div><div id="evidence"></div></section>
+    <section id="empty" class="empty"><div class="empty-icon">{ }</div><h2>Your repository, with receipts.</h2><p>Select an indexed repository or add a local Git checkout.<br>Python functions, classes, and module statements are searchable.</p><button class="secondary" id="empty-add">Index a repository</button></section>
+  </section>
+  <footer><span>RepoBrain / Developer preview</span><span>Source first. Commit pinned.</span></footer>
+</main>
+<dialog id="index-dialog"><form id="index-form"><div class="dialog-heading"><h2>Index a repository</h2><button type="button" id="close-index" class="icon-button" aria-label="Close">×</button></div><p>Enter a local Git checkout. RepoBrain reads Python files from its latest commit.</p><label for="path">Repository path</label><input id="path" placeholder="/Users/you/projects/my-repo" required><p class="field-note">Uncommitted changes are excluded. Run <code>repobrain demo</code> in the project directory to load the sample shop.</p><button id="index-submit" type="submit">Start indexing</button><p id="index-message" role="status"></p></form></dialog>
+<dialog id="source-dialog"><div class="dialog-heading"><div><h2 id="source-title"></h2><code id="source-sha"></code></div><button id="close-source" class="icon-button" aria-label="Close source">×</button></div><pre id="source-code"></pre></dialog>
+</body></html>

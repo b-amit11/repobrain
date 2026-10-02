@@ -1,0 +1,6 @@
+[
+  {"question": "How does API key authentication work?", "expected": ["auth.py:authenticate"]},
+  {"question": "Who can cancel an order?", "expected": ["orders.py:cancel_order", "auth.py:require_admin"]},
+  {"question": "Where is the order total calculated?", "expected": ["orders.py:calculate_total"]},
+  {"question": "How are positive quantities validated?", "expected": ["orders.py:calculate_total"]}
+]
