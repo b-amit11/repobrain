@@ -1,6 +1,10 @@
 # RepoBrain
 
+[![CI](https://github.com/b-amit11/repobrain/actions/workflows/ci.yml/badge.svg)](https://github.com/b-amit11/repobrain/actions/workflows/ci.yml)
+
 A working local foundation for codebase intelligence: tree-sitter Python parsing, incremental commit snapshots, BM25 search, source citations, optional Claude answers, and a read-only MCP server.
+
+**Stack:** Python · FastAPI · tree-sitter · SQLite FTS5 (BM25) · Model Context Protocol · Claude API · pytest · GitHub Actions
 
 ## Run
 
@@ -75,3 +79,7 @@ This milestone does not implement a GitHub App, automatic push ingestion, PR rev
 - [FastAPI static files](https://fastapi.tiangolo.com/tutorial/static-files/)
 - [Official MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
 - [Claude API](https://platform.claude.com/docs/en/api/overview)
+
+## License
+
+[MIT](LICENSE)
